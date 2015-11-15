@@ -14,10 +14,41 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative '../lib/cherry_silt.rb'
+# Connection class for each player
 
-require 'eventmachine'
+class Connection < EventMachine::Connection
+	attr_accessor :server
+	attr_accessor :name
+	attr_accessor :password
 
-test = Server
+	def initialize
+		@name = nil
+		@password = nil
+	end
 
-test.run!
+  def post_init
+    send_data("Please enter your name: ")
+  end
+
+  def receive_data(data)
+    data.strip!
+
+    if @name.nil?
+      login_user
+    else 
+      parse_message
+    end  
+  end
+
+  def login_user(name)
+    send_data("Hello #{name}")
+  end
+  
+  def parse_message(data)
+    send_data("You said: #{data}")
+  end
+
+end
+
+
+

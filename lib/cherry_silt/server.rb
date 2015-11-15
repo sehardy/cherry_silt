@@ -15,8 +15,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'eventmachine'
+require 'connection'
 
-module Server
+class Server
+  attr_accessor :connections
+
+  def initialize(ip='127.0.0.1', port=8081)
+    @ip = ip
+    @port = port
+    @connections = []
+  end
+
+  def run!
+    EventMachine.start_server @ip, @port, Connection) do |con|
+      con.server = self
+    end
+  end
 
   def post_init
     puts '-- someone connected to the echo server!'
@@ -30,5 +44,4 @@ module Server
   def unbind
     puts '-- someone disconnected from the echo server!'
   end
-  
 end
