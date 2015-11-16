@@ -18,6 +18,6 @@ require_relative '../lib/cherry_silt.rb'
 
 require 'eventmachine'
 
-test = Server
+test = Server.new
 
 test.run!

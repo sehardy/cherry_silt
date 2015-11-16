@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'eventmachine'
-require 'connection'
+require_relative 'connection'
 
 class Server
   attr_accessor :connections
@@ -27,8 +27,10 @@ class Server
   end
 
   def run!
-    EventMachine.start_server @ip, @port, Connection) do |con|
-      con.server = self
+    EventMachine.run do
+      EventMachine.start_server(@ip, @port, Connection) do |con|
+        con.server = self
+      end
     end
   end
 
@@ -36,9 +38,8 @@ class Server
     puts '-- someone connected to the echo server!'
   end
 
-  def receive_data(data)
-    send_data ">>>you sent: #{data}"
-    close_connection if data =~ /quit/i
+  def send_tick
+    # Refresh all game data ever X seconds.
   end
 
   def unbind

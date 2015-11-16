@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require 'eventmachine'
+
 # Connection class for each player
 
 class Connection < EventMachine::Connection
@@ -34,18 +36,30 @@ class Connection < EventMachine::Connection
     data.strip!
 
     if @name.nil?
-      login_user
+      login_user(data)
     else 
-      parse_message
+      parse_message(data)
     end  
   end
 
+  def unbind
+    @server.connections.delete(self)
+  end
+
   def login_user(name)
-    send_data("Hello #{name}")
+    send_data("Hello #{name}\n")
+    @name = name
+    @server.connections << self
   end
   
   def parse_message(data)
-    send_data("You said: #{data}")
+    send_data ">>>you sent: #{data}\n"
+    case data
+    when /^connections$/
+        send_data("There are #{@server.connections.length} connections.\n")
+    when /^quit$/i
+      close_connection
+    end
   end
 
 end

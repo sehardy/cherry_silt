@@ -22,7 +22,7 @@ class Room
   attr_accessor :type
 
   def initialize
-    # We'll do some yaml stuff here eventually.
+    @description
   end
 
   def get_room
