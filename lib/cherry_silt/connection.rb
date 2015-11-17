@@ -15,15 +15,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'eventmachine'
+require 'digest'
+require 'mongo'
 
 class Connection < EventMachine::Connection
   attr_accessor :server
-  attr_accessor :name
-  attr_accessor :password
+  attr_accessor :logged_in
+  attr_accessor :mongo_client
+  attr_accessor :user_data
+  attr_accessor :terminal_state
+  attr_accessor :failed_attempts
 
   def initialize
     @name = nil
-    @password = nil
+    @logged_in = nil
+    @failed_attempts = 0
+    @mongo_client = Mongo::Client.new(['127.0.0.1:27017'], database: 'mud')
   end
 
   def post_init
@@ -33,10 +40,12 @@ class Connection < EventMachine::Connection
   def receive_data(data)
     data.strip!
 
-    if @name.nil?
-      login_user(data)
+    if @user_data.nil?
+      fetch_user data
+    elsif ! @logged_in
+      login_user data
     else
-      parse_message(data)
+      parse_message data
     end
   end
 
@@ -44,10 +53,23 @@ class Connection < EventMachine::Connection
     @server.connections.delete(self)
   end
 
-  def login_user(name)
-    send_data("Hello #{name}\n")
-    @name = name
-    @server.connections << self
+  def fetch_user(name)
+    @user_data = @mongo_client[:users].find(name: name).first
+    @user_data = {name: 'unknown_user', password: 1} if @user_data.nil?
+    send_data 'password: '
+  end
+
+  def login_user(password)
+    passwd_sha256 = Digest::SHA256.base64digest password
+    if passwd_sha256 == @user_data[:password]
+      @logged_in = true
+      send_data "Hello #{user_data[:name]}\n"
+      @server.connections << self
+    else
+      @failed_attempts += 1
+      close_connection if @failed_attempts >= 3
+      send_data 'password: '
+    end
   end
 
   def parse_message(data)
