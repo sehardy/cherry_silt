@@ -16,8 +16,9 @@
 
 require_relative 'item'
 
+# Door class
 class Door < Item
   def initialize
-    #YAML stuff here
+    # YAML stuff here
   end
 end

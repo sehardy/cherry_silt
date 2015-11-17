@@ -14,13 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'eventmachine'
 require_relative 'connection'
+require 'eventmachine'
+require 'mongo'
 
+# The MUD server
 class Server
   attr_accessor :connections
 
-  def initialize(ip='127.0.0.1', port=8081)
+  def initialize(ip = '127.0.0.1', port = 8081)
     @ip = ip
     @port = port
     @connections = []

@@ -16,9 +16,10 @@
 
 require_relative 'item'
 
+# Armor Class
 class Armor < Item
   attr_accessor :equip_slot
   def initialize
-    #YAML stuff here
+    # YAML stuff here
   end
 end

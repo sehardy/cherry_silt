@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Room class
 class Room
   attr_accessor :description
   attr_accessor :name
@@ -25,7 +26,7 @@ class Room
     @description
   end
 
-  def get_room
+  def puts
     "#{@name}\n\n#{@description}\n#{@contents}"
   end
 end

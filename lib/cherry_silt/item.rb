@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+# Item class.
+# This is not instantiated directly.
 class Item
   attr_accessor :short_description
   attr_accessor :long_description

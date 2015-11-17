@@ -14,8 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Weapon class
 class Weapon < Item
   def initialize
-    #YAML stuff here
+    # YAML stuff here
   end
 end

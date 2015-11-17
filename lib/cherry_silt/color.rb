@@ -14,104 +14,105 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# ANSI color mapping
 module Color
-  def Color.normal
+  def self.normal
     "\x1B[0m"
   end
 
-  def Color.black
+  def self.black
     "\x1B[0;30m"
   end
 
-  def Color.red
+  def self.red
     "\x1B[0;31m"
   end
 
-  def Color.green
+  def self.green
     "\x1B[0;32m"
   end
 
-  def Color.yellow 
+  def self.yellow
     "\x1B[0;33m"
   end
 
-  def Color.blue 
+  def self.blue
     "\x1B[0;34m"
   end
 
-  def Color.magenta
+  def self.magenta
     "\x1B[0;35m"
   end
 
-  def Color.cyan 
+  def self.cyan
     "\x1B[0;36m"
   end
 
-  def Color.white 
+  def self.white
     "\x1B[0;37m"
   end
 
-  def Color.dark_black
+  def self.dark_black
     "\x1B[1;30m"
   end
 
-  def Color.dark_red 
+  def self.dark_red
     "\x1B[1;31m"
   end
 
-  def Color.dark_green
+  def self.dark_green
     "\x1B[1;32m"
   end
 
-  def Color.dark_yellow 
+  def self.dark_yellow
     "\x1B[1;33m"
   end
 
-  def Color.dark_blue
+  def self.dark_blue
     "\x1B[1;34m"
   end
 
-  def Color.dark_magenta 
+  def self.dark_magenta
     "\x1B[1;35m"
   end
 
-  def Color.dark_cyan 
+  def self.dark_cyan
     "\x1B[1;36m"
   end
 
-  def Color.dark_white 
+  def self.dark_white
     "\x1B[1;37m"
   end
 
-  def Color.background_black 
+  def self.background_black
     "\x1B[40m"
   end
 
-  def Color.background_red 
+  def self.background_red
     "\x1B[41m"
   end
 
-  def Color.background_green 
+  def self.background_green
     "\x1B[42m"
   end
 
-  def Color.background_yellow 
+  def self.background_yellow
     "\x1B[43m"
   end
 
-  def Color.background_blue 
+  def self.background_blue
     "\x1B[44m"
   end
 
-  def Color.background_magenta 
+  def self.background_magenta
     "\x1B[45m"
   end
 
-  def Color.background_cyan 
+  def self.background_cyan
     "\x1B[46m"
   end
 
-  def Color.background_white 
+  def self.background_white
     "\x1B[47m"
   end
 end
