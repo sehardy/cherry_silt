@@ -14,9 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Dir['./lib/cherry_silt/*.rb'].each {|file| require file}
-module CherrySilt
-	def self.version
-		VERSION
-	end
+class Weapon < Item
+  def initialize
+    #YAML stuff here
+  end
 end

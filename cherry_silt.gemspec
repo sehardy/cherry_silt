@@ -21,10 +21,13 @@ Gem::Specification.new do |s|
   s.name = 'cherry_silt'
   s.version = CherrySilt::VERSION
   s.platform = Gem::Platform::RUBY
+  s.date = '2015-11-10'
   s.authors = IO.read(File.join(File.dirname(__FILE__), 'AUTHORS'))
-  s.summary = 'MUD written in ruby'
+  s.summary = "MUD engine written in ruby with EventMachine"
+  s.email = 'shardy107@gmail.com'
   s.description = s.summary
-  s.homepage = ''
+  s.homepage =
+    'https://github.com/sehardy/cherry_silt'
 
   s.license = 'GPL, v3.0'
 

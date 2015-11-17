@@ -14,9 +14,35 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Dir['./lib/cherry_silt/*.rb'].each {|file| require file}
-module CherrySilt
-	def self.version
-		VERSION
-	end
+require 'eventmachine'
+require_relative 'connection'
+
+class Server
+  attr_accessor :connections
+
+  def initialize(ip='127.0.0.1', port=8081)
+    @ip = ip
+    @port = port
+    @connections = []
+  end
+
+  def run!
+    EventMachine.run do
+      EventMachine.start_server(@ip, @port, Connection) do |con|
+        con.server = self
+      end
+    end
+  end
+
+  def post_init
+    puts '-- someone connected to the echo server!'
+  end
+
+  def send_tick
+    # Refresh all game data ever X seconds.
+  end
+
+  def unbind
+    puts '-- someone disconnected from the echo server!'
+  end
 end

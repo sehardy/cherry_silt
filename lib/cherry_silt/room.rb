@@ -14,9 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Dir['./lib/cherry_silt/*.rb'].each {|file| require file}
-module CherrySilt
-	def self.version
-		VERSION
-	end
+class Room
+  attr_accessor :description
+  attr_accessor :name
+  attr_accessor :exits
+  attr_accessor :contents
+  attr_accessor :type
+
+  def initialize
+    @description
+  end
+
+  def get_room
+    "#{@name}\n\n#{@description}\n#{@contents}"
+  end
 end
