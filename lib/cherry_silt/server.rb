@@ -30,6 +30,8 @@ class Server
 
   def run!
     EventMachine.run do
+      Signal.trap('INT') { EventMachine.stop }
+      Signal.trap('TERM') { EventMachine.stop }
       EventMachine.start_server(@ip, @port, Connection) do |con|
         con.server = self
       end

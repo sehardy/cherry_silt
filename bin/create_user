@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require 'digest'
+require 'mongo'
+
+mongo_client = Mongo::Client.new([ '127.0.0.1:27017' ], database: 'mud')
+
+[
+  { name: 'test1', password: 'test1'},
+  { name: 'test2', password: 'test2'},
+  { name: 'test3', password: 'test3'},
+  { name: 'test4', password: 'test4'}
+].each do |user|
+  user[:password] = Digest::SHA256.base64digest user[:password]
+  mongo_client[:users].insert_one(user)
+end

@@ -26,7 +26,11 @@ class Room
     @description
   end
 
-  def puts
+  def to_s
     "#{@name}\n\n#{@description}\n#{@contents}"
+  end
+
+  def inspect
+    @description
   end
 end
