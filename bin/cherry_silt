@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # Cherry Silt -- MUD written in ruby using eventmachine
 # Copyright (C) 2015 Sean Hardy
 

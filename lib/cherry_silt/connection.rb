@@ -14,33 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'eventmachine'
+require 'digest'
 require 'mongo'
 require_relative 'color'
 
-# Connection class for each player
+# Connection class for each user.
 class Connection < EventMachine::Connection
   attr_accessor :server
-  attr_accessor :name
-  attr_accessor :password
+  attr_accessor :logged_in
+  attr_accessor :mongo_client
+  attr_accessor :user_data
+  attr_accessor :terminal_state
+  attr_accessor :failed_attempts
 
   def initialize
     @name = nil
-    @password = nil
-    @client = Mongo::Client.new(['127.0.0.1:27017'], database: 'mud')
-  end
-
-  def create_user(name)
-    send_data("#{Color.cyan}Hello #{name}!\n")
-    send_data("We don't really have things set up to create a character\n")
-    send_data("right now so fuck it, you're just you.\n")
-    send_data("We'll just get you added to the database and send you on your way.\n")
-    @client[:players].insert_one(name: "#{name}")
-    @name = name
-    send_data("There!  You're in!  Unfortunately you have no stats, no class,\n")
-    send_data("no race...nothing.  You're basically\n")
-    send_data("an amorphous blob...sooooo....have fun.#{Color.normal}\n")
-    show_prompt
+    @logged_in = nil
+    @failed_attempts = 0
+    @mongo_client = Mongo::Client.new(['127.0.0.1:27017'], database: 'mud')
   end
 
   def post_init
@@ -54,10 +45,12 @@ class Connection < EventMachine::Connection
   def receive_data(data)
     data.strip!
 
-    if @name.nil?
-      login_user(data)
+    if @user_data.nil?
+      fetch_user data
+    elsif ! @logged_in
+      login_user data
     else
-      parse_message(data)
+      parse_message data
     end
   end
 
@@ -65,16 +58,22 @@ class Connection < EventMachine::Connection
     @server.connections.delete(self)
   end
 
-  def login_user(name)
-    @server.connections << self
+  def fetch_user(name)
+    @user_data = @mongo_client[:users].find(name: name).first
+    @user_data = {name: 'unknown_user', password: 1} if @user_data.nil?
+    send_data 'password: '
+  end
 
-    case @client[:players].find(name: "#{name}").count
-    when 0
-      create_user(name)
-    when 1
-      send_data("Hello #{name}\n")
-      @name = name
-      show_prompt
+  def login_user(password)
+    passwd_sha256 = Digest::SHA256.base64digest password
+    if passwd_sha256 == @user_data[:password]
+      @logged_in = true
+      send_data "Hello #{user_data[:name]}\n"
+      @server.connections << self
+    else
+      @failed_attempts += 1
+      close_connection if @failed_attempts >= 3
+      send_data 'password: '
     end
   end
 
