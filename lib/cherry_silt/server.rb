@@ -20,7 +20,7 @@ require_relative 'connection'
 class Server
   attr_accessor :connections
 
-  def initialize(ip='127.0.0.1', port=8081)
+  def initialize(ip = '127.0.0.1', port = 8081)
     @ip = ip
     @port = port
     @connections = []

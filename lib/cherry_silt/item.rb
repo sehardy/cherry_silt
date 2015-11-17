@@ -20,4 +20,12 @@ class Item
   attr_accessor :long_description
   attr_accessor :name
   attr_accessor :affects
+
+  def to_s
+    @short_description
+  end
+
+  def inspect
+    @name
+  end
 end

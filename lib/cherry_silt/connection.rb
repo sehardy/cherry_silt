@@ -16,20 +16,18 @@
 
 require 'eventmachine'
 
-# Connection class for each player
-
 class Connection < EventMachine::Connection
-	attr_accessor :server
-	attr_accessor :name
-	attr_accessor :password
+  attr_accessor :server
+  attr_accessor :name
+  attr_accessor :password
 
-	def initialize
-		@name = nil
-		@password = nil
-	end
+  def initialize
+    @name = nil
+    @password = nil
+  end
 
   def post_init
-    send_data("Please enter your name: ")
+    send_data('Please enter your name: ')
   end
 
   def receive_data(data)
@@ -37,9 +35,9 @@ class Connection < EventMachine::Connection
 
     if @name.nil?
       login_user(data)
-    else 
+    else
       parse_message(data)
-    end  
+    end
   end
 
   def unbind
@@ -51,18 +49,14 @@ class Connection < EventMachine::Connection
     @name = name
     @server.connections << self
   end
-  
+
   def parse_message(data)
     send_data ">>>you sent: #{data}\n"
     case data
     when /^connections$/
-        send_data("There are #{@server.connections.length} connections.\n")
+      send_data("There are #{@server.connections.length} connections.\n")
     when /^quit$/i
       close_connection
     end
   end
-
 end
-
-
-

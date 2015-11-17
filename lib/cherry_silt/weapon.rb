@@ -16,6 +16,6 @@
 
 class Weapon < Item
   def initialize
-    #YAML stuff here
+    # YAML stuff here
   end
 end

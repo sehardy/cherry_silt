@@ -16,6 +16,6 @@
 
 class Food < Item
   def initialize
-    #YAML stuff here
+    # YAML stuff here
   end
 end

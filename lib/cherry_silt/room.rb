@@ -25,7 +25,11 @@ class Room
     @description
   end
 
-  def get_room
+  def to_s
     "#{@name}\n\n#{@description}\n#{@contents}"
+  end
+
+  def inspect
+    @description
   end
 end

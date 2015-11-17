@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-$:.push File.expand_path("../lib", __FILE__)
-require "cherry_silt/version"
+$LOAD_PATH.push File.expand_path('../lib', __FILE__)
+require 'cherry_silt/version'
 
 Gem::Specification.new do |s|
   s.name = 'cherry_silt'
@@ -23,11 +23,10 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.date = '2015-11-10'
   s.authors = IO.read(File.join(File.dirname(__FILE__), 'AUTHORS'))
-  s.summary = "MUD engine written in ruby with EventMachine"
+  s.summary = 'MUD engine written in ruby with EventMachine'
   s.email = 'shardy107@gmail.com'
   s.description = s.summary
-  s.homepage =
-    'https://github.com/sehardy/cherry_silt'
+  s.homepage = 'https://github.com/sehardy/cherry_silt'
 
   s.license = 'GPL, v3.0'
 
@@ -36,10 +35,16 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.executables = %w( cherry-silt )
 
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'rubocop'
-  s.add_development_dependency 'cucumber'
+  %w(
+    rake
+    rspec
+    rubocop
+    cucumber
+  ).each do |dev_gems|
+    s.add_development_dependency dev_gems
+  end
 
-  s.add_runtime_dependency 'eventmachine'
+  %w(eventmachine mongo).each do |run_gems|
+    s.add_runtime_dependency run_gems
+  end
 end
