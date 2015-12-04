@@ -14,9 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require 'eventmachine'
 require 'digest'
 require 'mongo'
-require_relative 'color'
+require 'cherry_silt/color'
 
 # Connection class for each user.
 class Connection < EventMachine::Connection
