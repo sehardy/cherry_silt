@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
 
   s.license = 'GPL, v3.0'
 
-  s.files = Dir['AUTHORS', 'LICENSE', 'README.md', 'Rakefile', 'lib/**/*']
+  s.files = Dir['AUTHORS', 'LICENSE', 'README.md', 'Rakefile', 'bin/*', 'lib/**/*']
   s.require_paths = ['lib']
   s.bindir = 'bin'
   s.executables = %w( cherry-silt )
