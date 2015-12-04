@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+$LOAD_PATH.push File.expand_path('../bin', __FILE__)
 $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'cherry_silt/version'
 
@@ -30,7 +31,7 @@ Gem::Specification.new do |s|
 
   s.license = 'GPL, v3.0'
   
-  #s.files = Dir['AUTHORS', 'LICENSE', 'README.md', 'Rakefile', 'bin/*', 'lib/**/*']
+  s.files = Dir['AUTHORS', 'LICENSE', 'README.md', 'Rakefile', 'bin/*', 'lib/**/*']
   s.require_paths = ['lib']
   s.bindir = 'bin'
   s.executables = %w( cherry-silt )

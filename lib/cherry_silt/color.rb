@@ -16,7 +16,7 @@
 
 # ANSI color mapping
 module Color
-  def self.normal
+  def self.default
     "\x1B[0m"
   end
 
@@ -84,6 +84,10 @@ module Color
     "\x1B[1;37m"
   end
 
+  def self.background_default
+    "\x1B[49m"
+  end
+
   def self.background_black
     "\x1B[40m"
   end
@@ -114,5 +118,77 @@ module Color
 
   def self.background_white
     "\x1B[47m"
+  end
+
+  def self.parse_text(text)
+    # Wrapper class for block notation
+    yield text
+  end
+
+  def self.parse(raw_text)
+    # First for this we need to establish what we're parsing
+    # Generally, it would be easiest to do a {<character> notation.
+    # i.e. {G would be green and {g would be dark green.
+    # For background we use } instead of {
+    # i.e. }g would be a green background.
+
+    # Table is as follows:
+    # default: {d
+    # black: {K
+    # red: {R
+    # green: {G
+    # yellow: {Y
+    # blue: {B
+    # magenta: {M
+    # cyan: {C
+    # white: {W
+    # dark_black: {k
+    # dark_red: {r
+    # dark_green: {g
+    # dark_yellow: {y
+    # dark_blue: {b
+    # dark_magenta: {m
+    # dark_cyan: {c
+    # dark_white: {w
+    # background_default: }d
+    # background_black: }k
+    # background_red: }r
+    # background_green: }g
+    # background_yellow: }y
+    # background_blue: }b
+    # background_magenta: }n
+    # background_cyan: }c
+    # background_white: }w
+
+    self.parse_text(raw_text) do |r|
+      r.gsub!('{d', "#{Color.default}")
+      r.gsub!('{K', "#{Color.black}")
+      r.gsub!('{R', "#{Color.red}")
+      r.gsub!('{G', "#{Color.green}")
+      r.gsub!('{Y', "#{Color.yellow}")
+      r.gsub!('{B', "#{Color.blue}")
+      r.gsub!('{M', "#{Color.magenta}")
+      r.gsub!('{C', "#{Color.cyan}")
+      r.gsub!('{W', "#{Color.white}")
+      r.gsub!('{k', "#{Color.dark_black}")
+      r.gsub!('{r', "#{Color.dark_red}")
+      r.gsub!('{g', "#{Color.dark_green}")
+      r.gsub!('{y', "#{Color.dark_yellow}")
+      r.gsub!('{b', "#{Color.dark_blue}")
+      r.gsub!('{m', "#{Color.dark_magenta}")
+      r.gsub!('{c', "#{Color.dark_cyan}")
+      r.gsub!('{w', "#{Color.dark_white}")
+      r.gsub!('}d', "#{Color.background_default}")
+      r.gsub!('}k', "#{Color.background_black}")
+      r.gsub!('}r', "#{Color.background_red}")
+      r.gsub!('}g', "#{Color.background_green}")
+      r.gsub!('}y', "#{Color.background_yellow}")
+      r.gsub!('}b', "#{Color.background_blue}")
+      r.gsub!('}n', "#{Color.background_magenta}")
+      r.gsub!('}c', "#{Color.background_cyan}")
+      r.gsub!('}w', "#{Color.background_white}")
+    end
+
+    raw_text
   end
 end

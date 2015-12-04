@@ -14,27 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Room class
-class Room
-  attr_accessor :description
-  attr_accessor :name
-  attr_accessor :exits
-  attr_accessor :contents
-  attr_accessor :type
+class Entity
+	attr_accessor :name
+	attr_accessor :long_name
 
-  def initialize(name="A blank room", description="There is nothing here", exits=[], contents=[], type=:exterior)
-    @name = name
-    @description = description
-    @exits = exits
-    @contents = contents
-    @type = type
-  end
-
-  def to_s
-
-  end
-
-  def inspect
-    @description
-  end
+	def initialize(name)
+		@name = name
+	end
 end
