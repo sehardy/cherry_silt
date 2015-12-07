@@ -16,108 +16,119 @@
 
 # ANSI color mapping
 module Color
+
+  def self.ansi_escape(n1=nil,n2=nil)
+    if n1.nil? and n2.nil?
+      "\x1B[0m"
+    elsif n2.nil?
+      "\x1B[#{n1}m"
+    else
+      "\x1B[#{n1};#{n2}m"
+    end
+  end
+
   def self.default
-    "\x1B[0m"
+    self.ansi_escape
   end
 
   def self.black
-    "\x1B[0;30m"
+    self.ansi_escape(30)
   end
 
   def self.red
-    "\x1B[0;31m"
+    self.ansi_escape(31)
   end
 
   def self.green
-    "\x1B[0;32m"
+    self.ansi_escape(32)
   end
 
   def self.yellow
-    "\x1B[0;33m"
+    self.ansi_escape(33)
   end
 
   def self.blue
-    "\x1B[0;34m"
+    self.ansi_escape(34)
   end
 
   def self.magenta
-    "\x1B[0;35m"
+    self.ansi_escape(35)
   end
 
   def self.cyan
-    "\x1B[0;36m"
+    self.ansi_escape(36)
   end
 
   def self.white
-    "\x1B[0;37m"
+    self.ansi_escape(37)
   end
 
-  def self.dark_black
-    "\x1B[1;30m"
+  def self.bright_black
+    self.ansi_escape(1,30)
   end
 
-  def self.dark_red
-    "\x1B[1;31m"
+  def self.bright_red
+    self.ansi_escape(1,31)
   end
 
-  def self.dark_green
-    "\x1B[1;32m"
+  def self.bright_green
+    self.ansi_escape(1,32)
   end
 
-  def self.dark_yellow
-    "\x1B[1;33m"
+  def self.bright_yellow
+    self.ansi_escape(1,33)
   end
 
-  def self.dark_blue
-    "\x1B[1;34m"
+  def self.bright_blue
+    self.ansi_escape(1,34)
   end
 
-  def self.dark_magenta
-    "\x1B[1;35m"
+  def self.bright_magenta
+    self.ansi_escape(1,35)
   end
 
-  def self.dark_cyan
-    "\x1B[1;36m"
+  def self.bright_cyan
+    self.ansi_escape(1,36)
   end
 
-  def self.dark_white
-    "\x1B[1;37m"
+  def self.bright_white
+    self.ansi_escape(1,37)
   end
 
   def self.background_default
-    "\x1B[49m"
+    self.ansi_escape(49)
   end
 
   def self.background_black
-    "\x1B[40m"
+    self.ansi_escape(40)
   end
 
   def self.background_red
-    "\x1B[41m"
+    self.ansi_escape(41)
   end
 
   def self.background_green
-    "\x1B[42m"
+    self.ansi_escape(42)
   end
 
   def self.background_yellow
-    "\x1B[43m"
+    self.ansi_escape(43)
   end
 
   def self.background_blue
-    "\x1B[44m"
+    self.ansi_escape(44)
   end
 
   def self.background_magenta
-    "\x1B[45m"
+    self.ansi_escape(45)
   end
 
   def self.background_cyan
-    "\x1B[46m"
+    self.ansi_escape(46)
   end
 
   def self.background_white
-    "\x1B[47m"
+    self.ansi_escape(47)
   end
 
   def self.parse_text(text)
@@ -128,12 +139,12 @@ module Color
   def self.parse(raw_text)
     # First for this we need to establish what we're parsing
     # Generally, it would be easiest to do a {<character> notation.
-    # i.e. {G would be green and {g would be dark green.
+    # i.e. {G would be green and {g would be bright green.
     # For background we use } instead of {
     # i.e. }g would be a green background.
 
     # Table is as follows:
-    # default: {d
+    # ansi_escape: {d
     # black: {K
     # red: {R
     # green: {G
@@ -142,15 +153,15 @@ module Color
     # magenta: {M
     # cyan: {C
     # white: {W
-    # dark_black: {k
-    # dark_red: {r
-    # dark_green: {g
-    # dark_yellow: {y
-    # dark_blue: {b
-    # dark_magenta: {m
-    # dark_cyan: {c
-    # dark_white: {w
-    # background_default: }d
+    # bright_black: {k
+    # bright_red: {r
+    # bright_green: {g
+    # bright_yellow: {y
+    # bright_blue: {b
+    # bright_magenta: {m
+    # bright_cyan: {c
+    # bright_white: {w
+    # background_ansi_escape: }d
     # background_black: }k
     # background_red: }r
     # background_green: }g
@@ -159,25 +170,26 @@ module Color
     # background_magenta: }n
     # background_cyan: }c
     # background_white: }w
+    # Escape characters: {{ and }}
 
     self.parse_text(raw_text) do |r|
       r.gsub!('{d', "#{Color.default}")
-      r.gsub!('{K', "#{Color.black}")
-      r.gsub!('{R', "#{Color.red}")
-      r.gsub!('{G', "#{Color.green}")
-      r.gsub!('{Y', "#{Color.yellow}")
-      r.gsub!('{B', "#{Color.blue}")
-      r.gsub!('{M', "#{Color.magenta}")
-      r.gsub!('{C', "#{Color.cyan}")
-      r.gsub!('{W', "#{Color.white}")
-      r.gsub!('{k', "#{Color.dark_black}")
-      r.gsub!('{r', "#{Color.dark_red}")
-      r.gsub!('{g', "#{Color.dark_green}")
-      r.gsub!('{y', "#{Color.dark_yellow}")
-      r.gsub!('{b', "#{Color.dark_blue}")
-      r.gsub!('{m', "#{Color.dark_magenta}")
-      r.gsub!('{c', "#{Color.dark_cyan}")
-      r.gsub!('{w', "#{Color.dark_white}")
+      r.gsub!('{k', "#{Color.black}")
+      r.gsub!('{r', "#{Color.red}")
+      r.gsub!('{g', "#{Color.green}")
+      r.gsub!('{y', "#{Color.yellow}")
+      r.gsub!('{b', "#{Color.blue}")
+      r.gsub!('{m', "#{Color.magenta}")
+      r.gsub!('{c', "#{Color.cyan}")
+      r.gsub!('{w', "#{Color.white}")
+      r.gsub!('{K', "#{Color.bright_black}")
+      r.gsub!('{R', "#{Color.bright_red}")
+      r.gsub!('{G', "#{Color.bright_green}")
+      r.gsub!('{Y', "#{Color.bright_yellow}")
+      r.gsub!('{B', "#{Color.bright_blue}")
+      r.gsub!('{M', "#{Color.bright_magenta}")
+      r.gsub!('{C', "#{Color.bright_cyan}")
+      r.gsub!('{W', "#{Color.bright_white}")
       r.gsub!('}d', "#{Color.background_default}")
       r.gsub!('}k', "#{Color.background_black}")
       r.gsub!('}r', "#{Color.background_red}")
