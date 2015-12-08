@@ -16,9 +16,8 @@
 
 # ANSI color mapping
 module Color
-
-  def self.ansi_escape(n1=nil,n2=nil)
-    if n1.nil? and n2.nil?
+  def self.ansi_escape(n1 = nil, n2 = nil)
+    if n1.nil? && n2.nil?
       "\x1B[0m"
     elsif n2.nil?
       "\x1B[#{n1}m"
@@ -28,107 +27,107 @@ module Color
   end
 
   def self.default
-    self.ansi_escape
+    ansi_escape
   end
 
   def self.black
-    self.ansi_escape(30)
+    ansi_escape(30)
   end
 
   def self.red
-    self.ansi_escape(31)
+    ansi_escape(31)
   end
 
   def self.green
-    self.ansi_escape(32)
+    ansi_escape(32)
   end
 
   def self.yellow
-    self.ansi_escape(33)
+    ansi_escape(33)
   end
 
   def self.blue
-    self.ansi_escape(34)
+    ansi_escape(34)
   end
 
   def self.magenta
-    self.ansi_escape(35)
+    ansi_escape(35)
   end
 
   def self.cyan
-    self.ansi_escape(36)
+    ansi_escape(36)
   end
 
   def self.white
-    self.ansi_escape(37)
+    ansi_escape(37)
   end
 
   def self.bright_black
-    self.ansi_escape(1,30)
+    ansi_escape(1, 30)
   end
 
   def self.bright_red
-    self.ansi_escape(1,31)
+    ansi_escape(1, 31)
   end
 
   def self.bright_green
-    self.ansi_escape(1,32)
+    ansi_escape(1, 32)
   end
 
   def self.bright_yellow
-    self.ansi_escape(1,33)
+    ansi_escape(1, 33)
   end
 
   def self.bright_blue
-    self.ansi_escape(1,34)
+    ansi_escape(1, 34)
   end
 
   def self.bright_magenta
-    self.ansi_escape(1,35)
+    ansi_escape(1, 35)
   end
 
   def self.bright_cyan
-    self.ansi_escape(1,36)
+    ansi_escape(1, 36)
   end
 
   def self.bright_white
-    self.ansi_escape(1,37)
+    ansi_escape(1, 37)
   end
 
   def self.background_default
-    self.ansi_escape(49)
+    ansi_escape(49)
   end
 
   def self.background_black
-    self.ansi_escape(40)
+    ansi_escape(40)
   end
 
   def self.background_red
-    self.ansi_escape(41)
+    ansi_escape(41)
   end
 
   def self.background_green
-    self.ansi_escape(42)
+    ansi_escape(42)
   end
 
   def self.background_yellow
-    self.ansi_escape(43)
+    ansi_escape(43)
   end
 
   def self.background_blue
-    self.ansi_escape(44)
+    ansi_escape(44)
   end
 
   def self.background_magenta
-    self.ansi_escape(45)
+    ansi_escape(45)
   end
 
   def self.background_cyan
-    self.ansi_escape(46)
+    ansi_escape(46)
   end
 
   def self.background_white
-    self.ansi_escape(47)
+    ansi_escape(47)
   end
 
   def self.parse_text(text)
@@ -172,7 +171,7 @@ module Color
     # background_white: }w
     # Escape characters: {{ and }}
 
-    self.parse_text(raw_text) do |r|
+    parse_text(raw_text) do |r|
       r.gsub!('{d', "#{Color.default}")
       r.gsub!('{k', "#{Color.black}")
       r.gsub!('{r', "#{Color.red}")
