@@ -14,11 +14,56 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Player class
-class Player < Entity
-	attr_accessor :title
+require 'digest'
 
-	def initialize
-		super
-	end
+##
+module CherrySilt
+  ##
+  class Player < Entity
+    attr_accessor :title
+    attr_accessor :password
+    attr_accessor :authenticated
+
+    def initialize(name)
+      super name
+    end
+
+    def ==(other)
+      self.instance_of?(other) &&
+        other.title == @title &&
+        other.password == @password
+    end
+
+    alias_method :eql?, :==
+
+    def to_h
+      { title: @title, password: @password }.merge super.to_h
+    end
+
+    def self.from_h(h)
+      player = super h
+      player.title = h['title']
+      player.password = h['password']
+      player
+    end
+
+    def hash
+      @title.hash ^ @password.hash ^ super.hash # not sure this is best
+    end
+
+    def generate_salt
+      ('"'..'~').to_a.sample(8).join
+    end
+
+    def verify_passwd(passwd)
+      salt, enc = @password.split '!'
+      @authenticated = enc == Digest::SHA256.hexdigest("#{salt}!#{passwd}")
+    end
+
+    def encrypt_passwd(passwd)
+      salt = generate_salt
+      enc = Digest::SHA256.hexdigest "#{salt}!#{passwd}"
+      @password = "#{salt}!#{enc}"
+    end
+  end
 end

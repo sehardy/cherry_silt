@@ -15,24 +15,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'eventmachine'
-require 'digest'
+require 'cherry_silt'
 require 'mongo'
-require 'cherry_silt/color'
 
 # Connection class for each user.
 class Connection < EventMachine::Connection
   attr_accessor :server
-  attr_accessor :logged_in
-  attr_accessor :mongo_client
-  attr_accessor :user_data
-  attr_accessor :terminal_state
-  attr_accessor :failed_attempts
+  attr_accessor :player
+  attr_accessor :login_attempts
+  attr_accessor :client
 
   def initialize
     @name = nil
-    @logged_in = nil
-    @failed_attempts = 0
-    @mongo_client = Mongo::Client.new(['127.0.0.1:27017'], database: 'mud')
+    @login_attempts = 0
+    @client = Mongo::Client.new(['127.0.0.1:27017'], database: 'mud')
   end
 
   def post_init
@@ -40,15 +36,15 @@ class Connection < EventMachine::Connection
   end
 
   def show_prompt
-    send_data(">>> ")
+    send_data('>>> ')
   end
 
   def receive_data(data)
     data.strip!
 
-    if @user_data.nil?
+    if @player.nil?
       fetch_user data
-    elsif ! @logged_in
+    elsif ! @player.authenticated
       login_user data
     else
       parse_message data
@@ -56,24 +52,29 @@ class Connection < EventMachine::Connection
   end
 
   def unbind
+    puts 'Bye Bye'
+    # this doesn't seem to be dropping connection
     @server.connections.delete(self)
   end
 
   def fetch_user(name)
-    @user_data = @mongo_client[:users].find(name: name).first
-    @user_data = {name: 'unknown_user', password: 1} if @user_data.nil?
+    p = @client[:player].find(name: name).first
+    begin
+      @player = CherrySilt::Player.from_h p
+    rescue
+      @player = CherrySilt::Player.new 'unknown_user' if @player.nil?
+      @player.password = '1!1'
+    end
     send_data 'password: '
   end
 
   def login_user(password)
-    passwd_sha256 = Digest::SHA256.base64digest password
-    if passwd_sha256 == @user_data[:password]
-      @logged_in = true
-      send_data "Hello #{user_data[:name]}\n"
-      @server.connections << self
+    @login_attempts += 1
+    unbind if @login_attempts > 3
+    puts @login_attempts
+    if @player.verify_passwd password
+      send_data "Hello #{@player.name}\n"
     else
-      @failed_attempts += 1
-      close_connection if @failed_attempts >= 3
       send_data 'password: '
     end
   end

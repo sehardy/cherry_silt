@@ -16,7 +16,6 @@
 
 require 'cherry_silt/connection'
 require 'eventmachine'
-require 'mongo'
 
 # The MUD server
 class Server
