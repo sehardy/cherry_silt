@@ -2,3 +2,4 @@ vendor/
 *.lock
 Gemfile
 .bundle/
+data/
