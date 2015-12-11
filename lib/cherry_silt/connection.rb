@@ -16,19 +16,16 @@
 
 require 'eventmachine'
 require 'cherry_silt'
-require 'mongo'
 
 # Connection class for each user.
 class Connection < EventMachine::Connection
   attr_accessor :server
   attr_accessor :player
   attr_accessor :login_attempts
-  attr_accessor :client
 
   def initialize
     @name = nil
     @login_attempts = 0
-    @client = Mongo::Client.new(['127.0.0.1:27017'], database: 'mud')
   end
 
   def post_init
@@ -58,7 +55,7 @@ class Connection < EventMachine::Connection
   end
 
   def fetch_user(name)
-    p = @client[:player].find(name: name).first
+    p = CherrySilt::Util::DB.find({name: name}, :player).first
     begin
       @player = CherrySilt::Player.from_h p
     rescue
