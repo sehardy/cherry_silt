@@ -78,7 +78,7 @@ class Room
   def to_h
     { name: @name, description: @description, exits: @exits,
      conents: @contents, type: @type,
-     _id: @id @id.nil? ? nil : @id}.delete_if { |k,v| v.nil? }
+     _id: @id}.delete_if { |k,v| v.nil? }
   end
 
   def from_h(h)
