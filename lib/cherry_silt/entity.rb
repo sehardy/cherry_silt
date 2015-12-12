@@ -19,11 +19,9 @@ module CherrySilt
   ##
   class Entity
     attr_accessor :name
-    attr_accessor :long_name
 
-    def initialize(name, long_name = nil)
+    def initialize(name)
       @name = name
-      @long_name = long_name
     end
 
     def ==(other)
