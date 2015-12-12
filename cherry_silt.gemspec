@@ -30,8 +30,13 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/sehardy/cherry_silt'
 
   s.license = 'GPL, v3.0'
-  
-  s.files = Dir['AUTHORS', 'LICENSE', 'README.md', 'Rakefile', 'bin/*', 'lib/**/*']
+
+  s.files = Dir['AUTHORS',
+                'LICENSE',
+                'README.md',
+                'Rakefile',
+                'bin/*',
+                'lib/**/*']
   s.require_paths = ['lib']
   s.bindir = 'bin'
   s.executables = %w( cherry-silt )
