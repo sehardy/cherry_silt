@@ -55,13 +55,7 @@ class Connection < EventMachine::Connection
   end
 
   def fetch_user(name)
-    p = CherrySilt::Util::DB.find({name: name}, :player).first
-    begin
-      @player = CherrySilt::Player.from_h p
-    rescue
-      @player = CherrySilt::Player.new 'unknown_user' if @player.nil?
-      @player.password = '1!1'
-    end
+    @player = CherrySilt::Player.load name
     send_data 'password: '
   end
 

@@ -14,9 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Food class
-class Food < Item
-  def initialize
-    # YAML stuff here
+#
+module CherrySilt
+  #
+  class Food < Item
+    def initialize(name)
+      super name, :food
+    end
   end
 end
