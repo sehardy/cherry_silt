@@ -55,13 +55,13 @@ class Connection < EventMachine::Connection
   end
 
   def fetch_user(name)
-    @player = CherrySilt::Player.load name
+    @player = CherrySilt::Player.new name
     send_data 'password: '
   end
 
   def login_user(password)
     @login_attempts += 1
-    unbind if @login_attempts > 3
+    close_connection if @login_attempts > 3
     puts @login_attempts
     if @player.verify_passwd password
       send_data "Hello #{@player.name}\n"

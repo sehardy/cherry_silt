@@ -25,26 +25,20 @@ module CherrySilt
     end
 
     def ==(other)
+      e = true
       self.instance_of?(other) &&
-        other.name == @name &&
-        other.long_name == @long_name
+        instance_variables.each do |truth|
+          e &&= instance_variable_get(truth) == other.instance_variable_get(truth)
+        end
     end
 
     alias_method :eql?, :==
 
-    def self.from_h(h)
-      entity = allocate
-      entity.name = h['name']
-      entity.long_name = h['long_name'] if h.key?('long_name')
-      entity
-    end
-
-    def to_h
-      { name: @name, long_name: @long_name }
-    end
-
     def hash
-      @name.hash ^ @long_name.hash # not sure this is best
+      h = 0
+      instance_variables.each do |v|
+        h ^= instance_variable_get(v).hash
+      end
     end
   end
 end

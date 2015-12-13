@@ -23,7 +23,7 @@ module CherrySilt
     include Mixin::Mongo
     attr_accessor :title
     attr_accessor :password
-    attr_accessor :authenticated
+    attr_reader :authenticated
 
     def initialize(name)
       super name
@@ -48,6 +48,7 @@ module CherrySilt
     end
 
     def verify_passwd(passwd)
+      return unless @password
       salt, enc = @password.split '!'
       @authenticated = enc == Digest::SHA256.hexdigest("#{salt}!#{passwd}")
     end
