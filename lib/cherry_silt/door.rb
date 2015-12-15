@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'cherry_silt/item'
-
-# Door class
-class Door < Item
-  def initialize
-    # YAML stuff here
+#
+module CherrySilt
+  #
+  class Door < Item
+    def initialize(name)
+      super name, :door
+    end
   end
 end

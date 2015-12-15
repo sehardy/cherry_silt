@@ -14,19 +14,35 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Item class.
-# This is not instantiated directly.
-class Item
-  attr_accessor :short_description
-  attr_accessor :long_description
-  attr_accessor :name
-  attr_accessor :affects
+require 'cherry_silt/db'
 
-  def to_s
-    @short_description
-  end
+#
+module CherrySilt
+  #
+  class Item
+    include Mixin::Mongo
+    attr_accessor :short_description
+    attr_accessor :long_description
+    attr_accessor :name
+    attr_accessor :affects
+    attr_accessor :type
 
-  def inspect
-    @name
+    def initialize(name, type)
+      @name = name
+      @type = type
+      create_client
+      @collection = @@client[:item]
+      @collection.indexes.create_one({ :@name => 1, :@type => 1 }, unique: true)
+      @affects = []
+      find(:@name => @name, :@type => @type)
+    end
+
+    def to_s
+      @short_description
+    end
+
+    def inspect
+      @name
+    end
   end
 end

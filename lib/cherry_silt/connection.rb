@@ -16,19 +16,16 @@
 
 require 'eventmachine'
 require 'cherry_silt'
-require 'mongo'
 
 # Connection class for each user.
 class Connection < EventMachine::Connection
   attr_accessor :server
   attr_accessor :player
   attr_accessor :login_attempts
-  attr_accessor :client
 
   def initialize
     @name = nil
     @login_attempts = 0
-    @client = Mongo::Client.new(['127.0.0.1:27017'], database: 'mud')
   end
 
   def post_init
@@ -58,19 +55,13 @@ class Connection < EventMachine::Connection
   end
 
   def fetch_user(name)
-    p = @client[:player].find(name: name).first
-    begin
-      @player = CherrySilt::Player.from_h p
-    rescue
-      @player = CherrySilt::Player.new 'unknown_user' if @player.nil?
-      @player.password = '1!1'
-    end
+    @player = CherrySilt::Player.new name
     send_data 'password: '
   end
 
   def login_user(password)
     @login_attempts += 1
-    unbind if @login_attempts > 3
+    close_connection if @login_attempts > 3
     puts @login_attempts
     if @player.verify_passwd password
       send_data "Hello #{@player.name}\n"

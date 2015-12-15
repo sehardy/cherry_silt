@@ -16,10 +16,13 @@
 
 require 'cherry_silt/item'
 
-# Armor Class
-class Armor < Item
-  attr_accessor :equip_slot
-  def initialize
-    # YAML stuff here
+#
+module CherrySilt
+  #
+  class Armor < Item
+    attr_accessor :equip_slot
+    def initialize(name)
+      super name, :armor
+    end
   end
 end

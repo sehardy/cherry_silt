@@ -20,12 +20,19 @@ require 'digest'
 module CherrySilt
   ##
   class Player < Entity
+    include Mixin::Mongo
     attr_accessor :title
     attr_accessor :password
-    attr_accessor :authenticated
+    attr_reader :authenticated
 
     def initialize(name)
       super name
+      create_client
+      @collection = @@client[:player]
+      # don'think this is a good thing.
+      # we are attempting to create an index each time we create a new object.
+      @collection.indexes.create_one({ :@name => 1 }, unique: true)
+      find(:@name => @name)
     end
 
     def ==(other)
@@ -36,26 +43,12 @@ module CherrySilt
 
     alias_method :eql?, :==
 
-    def to_h
-      { title: @title, password: @password }.merge super.to_h
-    end
-
-    def self.from_h(h)
-      player = super h
-      player.title = h['title']
-      player.password = h['password']
-      player
-    end
-
     def hash
       @title.hash ^ @password.hash ^ super.hash # not sure this is best
     end
 
-    def generate_salt
-      ('"'..'~').to_a.sample(8).join
-    end
-
     def verify_passwd(passwd)
+      return unless @password
       salt, enc = @password.split '!'
       @authenticated = enc == Digest::SHA256.hexdigest("#{salt}!#{passwd}")
     end
@@ -65,5 +58,11 @@ module CherrySilt
       enc = Digest::SHA256.hexdigest "#{salt}!#{passwd}"
       @password = "#{salt}!#{enc}"
     end
+
+    def generate_salt
+      ('"'..'~').to_a.sample(8).join
+    end
+
+    private :generate_salt, :password
   end
 end
