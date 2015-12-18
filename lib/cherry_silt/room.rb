@@ -45,12 +45,5 @@ module CherrySilt
       #      (19) A tankard of cool, dark ale is here.
       "#{@name}\n#{@description}\n\n#{@contents}\n\n"
     end
-
-    def inspect
-      # Probably not needed.  When a player issues a 'look' command it will run
-      # the to_s function inside of either the player class or the connection
-      # class.  Leaving for now.
-      @description
-    end
   end
 end
