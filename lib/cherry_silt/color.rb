@@ -135,7 +135,7 @@ module Color
     yield text
   end
 
-  def self.parse(raw_text)
+  def self.parse(raw_text, show_color=true)
     # First for this we need to establish what we're parsing
     # Generally, it would be easiest to do a {<character> notation.
     # i.e. {G would be green and {g would be bright green.
@@ -170,36 +170,65 @@ module Color
     # background_cyan: }c
     # background_white: }w
     # Escape characters: {{ and }}
-
-    parse_text(raw_text) do |r|
-      r.gsub!('{d', "#{Color.default}")
-      r.gsub!('{k', "#{Color.black}")
-      r.gsub!('{r', "#{Color.red}")
-      r.gsub!('{g', "#{Color.green}")
-      r.gsub!('{y', "#{Color.yellow}")
-      r.gsub!('{b', "#{Color.blue}")
-      r.gsub!('{m', "#{Color.magenta}")
-      r.gsub!('{c', "#{Color.cyan}")
-      r.gsub!('{w', "#{Color.white}")
-      r.gsub!('{K', "#{Color.bright_black}")
-      r.gsub!('{R', "#{Color.bright_red}")
-      r.gsub!('{G', "#{Color.bright_green}")
-      r.gsub!('{Y', "#{Color.bright_yellow}")
-      r.gsub!('{B', "#{Color.bright_blue}")
-      r.gsub!('{M', "#{Color.bright_magenta}")
-      r.gsub!('{C', "#{Color.bright_cyan}")
-      r.gsub!('{W', "#{Color.bright_white}")
-      r.gsub!('}d', "#{Color.background_default}")
-      r.gsub!('}k', "#{Color.background_black}")
-      r.gsub!('}r', "#{Color.background_red}")
-      r.gsub!('}g', "#{Color.background_green}")
-      r.gsub!('}y', "#{Color.background_yellow}")
-      r.gsub!('}b', "#{Color.background_blue}")
-      r.gsub!('}n', "#{Color.background_magenta}")
-      r.gsub!('}c', "#{Color.background_cyan}")
-      r.gsub!('}w', "#{Color.background_white}")
+    if show_color
+      parse_text(raw_text) do |r|
+        r.gsub!('{d', "#{Color.default}")
+        r.gsub!('{k', "#{Color.black}")
+        r.gsub!('{r', "#{Color.red}")
+        r.gsub!('{g', "#{Color.green}")
+        r.gsub!('{y', "#{Color.yellow}")
+        r.gsub!('{b', "#{Color.blue}")
+        r.gsub!('{m', "#{Color.magenta}")
+        r.gsub!('{c', "#{Color.cyan}")
+        r.gsub!('{w', "#{Color.white}")
+        r.gsub!('{K', "#{Color.bright_black}")
+        r.gsub!('{R', "#{Color.bright_red}")
+        r.gsub!('{G', "#{Color.bright_green}")
+        r.gsub!('{Y', "#{Color.bright_yellow}")
+        r.gsub!('{B', "#{Color.bright_blue}")
+        r.gsub!('{M', "#{Color.bright_magenta}")
+        r.gsub!('{C', "#{Color.bright_cyan}")
+        r.gsub!('{W', "#{Color.bright_white}")
+        r.gsub!('}d', "#{Color.background_default}")
+        r.gsub!('}k', "#{Color.background_black}")
+        r.gsub!('}r', "#{Color.background_red}")
+        r.gsub!('}g', "#{Color.background_green}")
+        r.gsub!('}y', "#{Color.background_yellow}")
+        r.gsub!('}b', "#{Color.background_blue}")
+        r.gsub!('}n', "#{Color.background_magenta}")
+        r.gsub!('}c', "#{Color.background_cyan}")
+        r.gsub!('}w', "#{Color.background_white}")
+      end
+    else
+      parse_text(raw_text) do |r|
+        r.gsub!('{d', '')
+        r.gsub!('{k', '')
+        r.gsub!('{r', '')
+        r.gsub!('{g', '')
+        r.gsub!('{y', '')
+        r.gsub!('{b', '')
+        r.gsub!('{m', '')
+        r.gsub!('{c', '')
+        r.gsub!('{w', '')
+        r.gsub!('{K', '')
+        r.gsub!('{R', '')
+        r.gsub!('{G', '')
+        r.gsub!('{Y', '')
+        r.gsub!('{B', '')
+        r.gsub!('{M', '')
+        r.gsub!('{C', '')
+        r.gsub!('{W', '')
+        r.gsub!('}d', '')
+        r.gsub!('}k', '')
+        r.gsub!('}r', '')
+        r.gsub!('}g', '')
+        r.gsub!('}y', '')
+        r.gsub!('}b', '')
+        r.gsub!('}n', '')
+        r.gsub!('}c', '')
+        r.gsub!('}w', '')
+      end
     end
-
     raw_text
   end
 end
