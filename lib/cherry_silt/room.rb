@@ -26,15 +26,17 @@ module CherrySilt
     attr_accessor :exits
     attr_accessor :contents
     attr_accessor :type
+    attr_accessor :collection
 
     def initialize
       @name = 'A blank room'
-      @description = 'There is nothing here'
-      @exits = []
+      @description = '  There is nothing here'
+      @exits = { N: '', S: '', E: '', W: '', U: '', D: '' }
       @contents = []
       @type = :exterior
       create_client
-      @collection = @@client[:room]
+      @collection = @@client[:rooms]
+      @uid = nil
     end
 
     def to_s
