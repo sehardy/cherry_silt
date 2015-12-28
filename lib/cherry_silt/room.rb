@@ -45,7 +45,11 @@ module CherrySilt
       # contents.
       # i.e. ( 2) A rolled up map is here.
       #      (19) A tankard of cool, dark ale is here.
-      "#{@name}\n#{@description}\n\n#{@contents}\n\n"
+      if @contents.length > 0
+        "#{@name}\n#{@description}\n\n#{@contents}\n\n"
+      else
+        "#{@name}\n#{@description}\n\n"
+      end
     end
   end
 end
