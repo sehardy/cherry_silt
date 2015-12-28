@@ -25,14 +25,24 @@ module CherrySilt
     attr_accessor :password
     attr_reader :authenticated
 
-    def initialize(name)
+    def initialize(name=nil)
       super name
       create_client
-      @collection = @@client[:player]
+      @password = nil
+      @collection = @@client[:players]
+      @authenticated = false
+      @uid = nil
       # don'think this is a good thing.
       # we are attempting to create an index each time we create a new object.
-      @collection.indexes.create_one({ :@name => 1 }, unique: true)
-      find(:@name => @name)
+      #@collection.indexes.create_one({ :@name => 1 }, unique: true)
+    end
+
+    def exists?
+      find(name: @name).nil?
+    end
+
+    def password?
+      @password.nil?
     end
 
     def ==(other)
@@ -57,6 +67,14 @@ module CherrySilt
       salt = generate_salt
       enc = Digest::SHA256.hexdigest "#{salt}!#{passwd}"
       @password = "#{salt}!#{enc}"
+    end
+
+    def deauthenticate!
+      @authenticated = false
+    end
+
+    def authenticated?
+      @authenticated
     end
 
     def generate_salt

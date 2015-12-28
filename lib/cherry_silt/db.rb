@@ -39,8 +39,9 @@ module CherrySilt
           @uid = result.inserted_id
         else
           document[:_id] = @uid
-          @collection.find_one_and_update({ _id: @uid },
-                                          return_document: :after)
+          puts document
+          @collection.find_one_and_update(document,
+                           return_document: :after)
         end
       end
 
