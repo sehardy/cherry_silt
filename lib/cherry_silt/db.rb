@@ -34,9 +34,7 @@ module CherrySilt
       def save!
         create_client
         document = to_h
-        puts document
         if @uid.nil?
-          puts 'inserting new'
           result = @collection.insert_one document
           @uid = result.inserted_id
         else
