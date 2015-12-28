@@ -34,11 +34,13 @@ module CherrySilt
       def save!
         create_client
         document = to_h
+        puts document
         if @uid.nil?
+          puts 'inserting new'
           result = @collection.insert_one document
           @uid = result.inserted_id
         else
-          document[:_uid] = @uid
+          document[:_id] = @uid
           @collection.find_one_and_update({ _id: @uid },
                                           return_document: :after)
         end
@@ -48,7 +50,9 @@ module CherrySilt
         h = {}
         instance_variables.each do |var_name|
           next if var_name == :@collection || var_name == :@uid
-          h[var_name] = instance_variable_get(var_name)
+          tmp = var_name.to_s
+          tmp_var_name = tmp.tr!('@', '').to_sym
+          h[tmp_var_name] = instance_variable_get(var_name)
         end
         h
       end
@@ -60,7 +64,8 @@ module CherrySilt
         @uid = result[:_id]
         result.each do |key, value|
           next if key.to_sym == :_id
-          instance_variable_set(key.to_sym, value)
+          key = "@#{key}".to_sym
+          instance_variable_set(key, value)
         end
       end
 
