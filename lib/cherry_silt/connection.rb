@@ -85,6 +85,7 @@ class Connection < EventMachine::Connection
       send_data "Hello #{@player.name}\n"
       @state = :playing
       send_data show_prompt
+      @player.save!
     else
       send_data "Incorrect password.  You have #{3-login_attempts} attempts remaining.\n"
       send_data 'Password: '
