@@ -38,11 +38,7 @@ module CherrySilt
     end
 
     def exists?
-      find(name: @name).nil?
-    end
-
-    def password?
-      @password.nil?
+      !find(name: @name).nil?
     end
 
     def ==(other)
@@ -71,10 +67,6 @@ module CherrySilt
 
     def deauthenticate!
       @authenticated = false
-    end
-
-    def authenticated?
-      @authenticated
     end
 
     def generate_salt

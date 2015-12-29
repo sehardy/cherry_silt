@@ -40,8 +40,7 @@ module CherrySilt
         else
           document[:_id] = @uid
           puts document
-          @collection.find_one_and_update(document,
-                           return_document: :after)
+          @collection.find(_id: document[:_id]).find_one_and_update(document)
         end
       end
 

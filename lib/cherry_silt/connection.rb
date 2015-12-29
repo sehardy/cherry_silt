@@ -23,6 +23,7 @@ Mongo::Logger.logger.level = Logger::WARN
 class Connection < EventMachine::Connection
   attr_accessor :server
   attr_accessor :player
+  attr_accessor :state
   attr_accessor :login_attempts
 
   @@connections = []
@@ -31,96 +32,92 @@ class Connection < EventMachine::Connection
     @name = nil
     @login_attempts = 0
     @player = CherrySilt::Player.new
+    @state = :new_connection
   end
 
   def post_init
     send_data('Please enter your name: ')
+    @state = :checking_user
     @@connections << self
   end
 
   def show_prompt
-    send_data('>>> ')
+    '>>> '
   end
 
   def receive_data(data)
     data.strip!
 
-    puts "Player exists? #{@player.exists?}"
-
-    if @player.exists?
-      if @player.password?
-        create_user(data)
-      elsif @player.authenticated?
-        game_loop data
+    case @state
+    when :checking_user
+      @player.name = data
+      if !@player.exists?
+        @state = :creating_user
+        send_data "Create a password for #{@player.name}: "
       else
-        login_user data
+        @state = :authenticating_user
+        send_data "Please enter password for #{@player.name}: "
       end
-    else
+    when :creating_user
       create_user data
+      @state = :playing
+    when :authenticating_user
+      login_user data
+    when :playing
+      game_loop data
+    else
+      send_data 'How the hell did you get here?'
     end
   end
 
   def unbind
     @player.deauthenticate!
-    puts "#{@player.name} is authenticated? #{@player.authenticated}"
     @player.save!
     @@connections.delete(self)
     puts 'Bye Bye'
   end
 
   def login_user(data)
-    puts "Login_user"
     @login_attempts += 1
     close_connection if @login_attempts > 3
-    puts "Puts #{@player.name} is logging in..."
     puts @login_attempts
     if @player.verify_passwd data
       send_data "Hello #{@player.name}\n"
+      @state = :playing
+      send_data show_prompt
     else
-      send_data 'password: '
+      send_data "Incorrect password.  You have #{3-login_attempts} attempts remaining.\n"
+      send_data 'Password: '
     end
   end
 
   def create_user(data)
-    puts "create_user"
-    if @player.name.nil?
-      puts "Setting name"
-      @player.name = data
-      puts "Name set to #{@player.name}"
-      send_data "Enter a password for #{@player.name}: "
-    else
-      set_password data
-    end
+    puts "Creating user"
+    set_password data
+    @player.save!
+    @player.verify_passwd data
+
   end
 
   def set_password(data)
-    puts "set_password"
-    puts "Setting password #{data} for #{@player.name}"
     @player.encrypt_passwd data
-    @player.verify_passwd data
-    @player.save!
-    send_data "Hello #{@player.name}\n"
-    game_loop('look')
   end
 
-  def game_loop(data=nil)
+  def look(data=nil)
     send_data(Color.parse("{CThe First Room{d\n", true))
     send_data("  Okay, so this isn't really saved anywhere.  It's hard coded into connection.rb\n\n")
-    send_data(show_prompt)
-    parse_message(data)
   end
 
-  def parse_message(data)
-    puts "parse_message"
-    send_data ">>>you sent: #{data}\n"
+  def game_loop(data)
     case data
+    when ''
+      send_data "\n"
     when /^connections$/
-      send_data("There are #{@@connections.length} connections.\n")
-      show_prompt
+      send_data "There are #{@@connections.length} connections.\n"
     when /^quit$/i
       close_connection
     when /^look/i
-      game_loop
+      look
     when /^color_test$/i
       send_data Color.parse("{GGreen{d\n", true)
     when /^chat (.*)$/i
@@ -128,6 +125,9 @@ class Connection < EventMachine::Connection
         con.send_data(Color.parse("#{Regexp.last_match[1].to_s}\n", true))
         con.send_data(show_prompt)
       end
+    else
+      send_data "I'm sorry, I do not know what #{data} is.\n"
     end
+    send_data show_prompt
   end
 end
