@@ -25,8 +25,11 @@ class Connection < EventMachine::Connection
   attr_accessor :player
   attr_accessor :state
   attr_accessor :login_attempts
-
   @@connections = []
+
+  def Connection.connections
+    @@connections
+  end
 
   def initialize
     @name = nil
@@ -93,7 +96,6 @@ class Connection < EventMachine::Connection
   end
 
   def create_user(data)
-    puts "Creating user"
     set_password data
     @player.save!
     @player.verify_passwd data
@@ -104,31 +106,10 @@ class Connection < EventMachine::Connection
     @player.encrypt_passwd data
   end
 
-  def look(data=nil)
-    send_data(Color.parse("{CThe First Room{d\n", true))
-    send_data("  Okay, so this isn't really saved anywhere.  It's hard coded into connection.rb\n\n")
-  end
+
 
   def game_loop(data)
-    case data
-    when ''
-      send_data "\n"
-    when /^connections$/
-      send_data "There are #{@@connections.length} connections.\n"
-    when /^quit$/i
-      close_connection
-    when /^look/i
-      look
-    when /^color_test$/i
-      send_data Color.parse("{GGreen{d\n", true)
-    when /^chat (.*)$/i
-      @@connections.each do |con|
-        con.send_data(Color.parse("#{Regexp.last_match[1].to_s}\n", true))
-        con.send_data(show_prompt)
-      end
-    else
-      send_data "I'm sorry, I do not know what #{data} is.\n"
-    end
+    send_data(CherrySilt::CommandParser.parse!(data, self.signature))
     send_data show_prompt
   end
 end
