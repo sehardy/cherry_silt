@@ -39,7 +39,6 @@ module CherrySilt
           @uid = result.inserted_id
         else
           document[:_id] = @uid
-          puts document
           @collection.find(_id: document[:_id]).find_one_and_update(document)
         end
       end
