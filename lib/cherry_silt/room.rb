@@ -27,6 +27,7 @@ module CherrySilt
     attr_accessor :contents
     attr_accessor :type
     attr_accessor :collection
+    attr_accessor :area
 
     def initialize
       @name = 'A blank room'
@@ -37,6 +38,7 @@ module CherrySilt
       create_client
       @collection = @@client[:rooms]
       @uid = nil
+      @area = ''
     end
 
     def to_s
