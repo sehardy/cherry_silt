@@ -16,6 +16,8 @@
 
 require 'mongo'
 
+Mongo::Logger.logger.level = Logger::WARN
+
 ##
 module CherrySilt
   ##
@@ -27,8 +29,11 @@ module CherrySilt
       attr_accessor :uid
 
       def create_client
-        # should load database settings from yaml file
-        @@client ||= ::Mongo::Client.new(['127.0.0.1:27017'], database: 'mud')
+        # could use some error handling
+        CherrySilt::Config.load!('config/db.yml')
+        db = CherrySilt::Config.mongo['database']
+        endpoints = CherrySilt::Config.mongo['endpoints']
+        @@client ||= ::Mongo::Client.new(endpoints, database: db)
       end
 
       def save!

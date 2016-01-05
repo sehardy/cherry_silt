@@ -17,8 +17,6 @@
 require 'eventmachine'
 require 'cherry_silt'
 
-Mongo::Logger.logger.level = Logger::WARN
-
 # Connection class for each user.
 class Connection < EventMachine::Connection
   attr_accessor :server

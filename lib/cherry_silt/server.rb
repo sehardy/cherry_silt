@@ -21,9 +21,10 @@ require 'eventmachine'
 class Server
   attr_accessor :connections
 
-  def initialize(ip = '127.0.0.1', port = 8081)
-    @ip = ip
-    @port = port
+  def initialize
+    CherrySilt::Config.load!('config/server.yml')
+    @ip = CherrySilt::Config.server['ip']
+    @port = CherrySilt::Config.server['port']
     @connections = []
   end
 
