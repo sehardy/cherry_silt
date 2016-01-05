@@ -1,0 +1,5 @@
+---
+mongo:
+  database: mud
+  endpoints:
+    - localhost:27017
