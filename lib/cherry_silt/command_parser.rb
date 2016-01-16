@@ -58,20 +58,11 @@ module CherrySilt
     end
 
     def self.dig(*args)
-      if args[0] == 'help'
-        "Usage: dig [n|s|e|w]\nThis creates and links a new room in the direction specified\n"
-      elsif arg[0].downcase =~ /(n|s|e|w)/
-
-
-      end
+      "Usage: dig [n|s|e|w]\nThis creates and links a new room in the direction specified\n"
     end
 
     def self.link(*args)
-      if args[0] == 'help'
-        "Usage: link [n|s|e|w] [room_uid]\nThis is used to create a link between two existing rooms at the specified direction.\n"
-      else
-
-      end
+      "Usage: link [n|s|e|w] [room_uid]\nThis is used to create a link between two existing rooms at the specified direction.\n"
     end
 
     def self.color_test(*args)
